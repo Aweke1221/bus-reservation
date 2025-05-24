@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Bus Booking System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome (for icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Custom CSS (Optional) -->
+    <link rel="stylesheet" href="../css/style.css"> <!-- General styles, if any apply -->
+    <!-- <link rel="stylesheet" href="../css/admin-style.css"> --> <!-- Admin specific styles -->
+    <style>
+        body {
+            padding-top: 70px; /* Increased for potentially taller navbar */
+            padding-bottom: 70px; /* For fixed footer */
+            background-color: #f4f6f9; /* Light grey-blue background */
+        }
+        .admin-section {
+            display: none; /* Hidden by default */
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid #e0e0e0;
+            border-radius: 0.3rem;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,.075);
+        }
+        .admin-section.active {
+            display: block;
+        }
+        .table-responsive-md {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .navbar-brand {
+            font-weight: 600;
+        }
+        .nav-link.admin-nav-link {
+            font-weight: 500;
+        }
+        .nav-link.admin-nav-link.active {
+            font-weight: 700;
+            color: #ffc107 !important; /* Example active link highlight */
+        }
+        .modal-header {
+            background-color: #0069d9; /* Slightly darker blue for modal headers */
+            color: white;
+            border-bottom: none;
+        }
+        .modal-header .close {
+            color: white;
+            opacity: 1;
+            text-shadow: none;
+        }
+        .modal-title {
+            font-weight: 500;
+        }
+        /* Ensure modals are on top */
+        .modal { z-index: 1050 !important; }
+        .modal-backdrop { z-index: 1040 !important; }
+        .card-header { font-weight: 500; }
+        .table th { background-color: #e9ecef; }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-shield-alt mr-2"></i>BusBook Admin
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="adminNavbar">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link admin-nav-link" href="#" data-section="dashboard"><i class="fas fa-tachometer-alt mr-1"></i>Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link admin-nav-link" href="#" data-section="manage-buses"><i class="fas fa-bus mr-1"></i>Buses</a></li>
+                    <li class="nav-item"><a class="nav-link admin-nav-link" href="#" data-section="manage-routes"><i class="fas fa-route mr-1"></i>Routes</a></li>
+                    <li class="nav-item"><a class="nav-link admin-nav-link" href="#" data-section="manage-schedules"><i class="far fa-calendar-alt mr-1"></i>Schedules</a></li>
+                    <li class="nav-item"><a class="nav-link admin-nav-link" href="#" data-section="view-bookings"><i class="fas fa-ticket-alt mr-1"></i>Bookings</a></li>
+                    <li class="nav-item"><a class="nav-link admin-nav-link" href="#" data-section="manage-users"><i class="fas fa-users-cog mr-1"></i>Users</a></li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="adminUserDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-user-circle mr-1"></i><span id="adminUsernameDisplay">Admin</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="adminUserDropdown">
+                            <a class="dropdown-item" href="#">Profile</a> 
+                            <div class="dropdown-divider"></div> 
+                            <a class="dropdown-item" href="#" onclick="window.adminApp.logout()"><i class="fas fa-sign-out-alt mr-1"></i>Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="container-fluid mt-4">
+        <div id="adminGlobalMessageArea" class="mb-3"></div>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="admin-section">
+            <h2 class="mb-3"><i class="fas fa-tachometer-alt mr-2"></i>Dashboard Overview</h2>
+            <hr class="mb-4">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-white bg-primary h-100">
+                        <div class="card-body"><div class="d-flex justify-content-between"><i class="fas fa-bus fa-2x"></i><div class="text-right"><h3><span id="statTotalBuses">-</span></h3><p class="mb-0">Total Buses</p></div></div></div>
+                        <a class="card-footer text-white clearfix small z-1" href="#" onclick="window.adminApp.navigateToSection('manage-buses')"><span class="float-left">View Details</span><span class="float-right"><i class="fas fa-angle-right"></i></span></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-white bg-success h-100">
+                        <div class="card-body"><div class="d-flex justify-content-between"><i class="far fa-calendar-alt fa-2x"></i><div class="text-right"><h3><span id="statTotalSchedules">-</span></h3><p class="mb-0">Active Schedules</p></div></div></div>
+                        <a class="card-footer text-white clearfix small z-1" href="#" onclick="window.adminApp.navigateToSection('manage-schedules')"><span class="float-left">View Details</span><span class="float-right"><i class="fas fa-angle-right"></i></span></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-white bg-warning h-100">
+                        <div class="card-body"><div class="d-flex justify-content-between"><i class="fas fa-ticket-alt fa-2x"></i><div class="text-right"><h3><span id="statTotalBookings">-</span></h3><p class="mb-0">Total Bookings</p></div></div></div>
+                        <a class="card-footer text-white clearfix small z-1" href="#" onclick="window.adminApp.navigateToSection('view-bookings')"><span class="float-left">View Details</span><span class="float-right"><i class="fas fa-angle-right"></i></span></a>
+                    </div>
+                </div>
+                 <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-white bg-danger h-100">
+                        <div class="card-body"><div class="d-flex justify-content-between"><i class="fas fa-users fa-2x"></i><div class="text-right"><h3><span id="statTotalUsers">-</span></h3><p class="mb-0">Registered Users</p></div></div></div>
+                        <a class="card-footer text-white clearfix small z-1" href="#" onclick="window.adminApp.navigateToSection('manage-users')"><span class="float-left">View Details</span><span class="float-right"><i class="fas fa-angle-right"></i></span></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Manage Buses Section -->
+        <section id="manage-buses" class="admin-section">
+            <div class="d-flex justify-content-between align-items-center mb-3"><h2><i class="fas fa-bus mr-2"></i>Manage Buses</h2><button class="btn btn-success" onclick="window.adminApp.openBusModal()"><i class="fas fa-plus mr-1"></i>Add New Bus</button></div>
+            <div class="table-responsive-md"><table class="table table-striped table-hover table-bordered">
+                <thead class="thead-light"><tr><th>ID</th><th>Name</th><th>Registration No.</th><th>Capacity</th><th>Actions</th></tr></thead>
+                <tbody id="busesTableBody"><tr><td colspan="5" class="text-center p-4"><div class="spinner-border spinner-border-sm text-primary" role="status"></div> Loading...</td></tr></tbody>
+            </table></div>
+        </section>
+
+        <!-- Manage Routes Section -->
+        <section id="manage-routes" class="admin-section">
+            <div class="d-flex justify-content-between align-items-center mb-3"><h2><i class="fas fa-route mr-2"></i>Manage Routes</h2><button class="btn btn-success" onclick="window.adminApp.openRouteModal()"><i class="fas fa-plus mr-1"></i>Add New Route</button></div>
+            <div class="table-responsive-md"><table class="table table-striped table-hover table-bordered">
+                <thead class="thead-light"><tr><th>ID</th><th>Source</th><th>Destination</th><th>Actions</th></tr></thead>
+                <tbody id="routesTableBody"><tr><td colspan="4" class="text-center p-4"><div class="spinner-border spinner-border-sm text-primary" role="status"></div> Loading...</td></tr></tbody>
+            </table></div>
+        </section>
+
+        <!-- Manage Schedules Section -->
+        <section id="manage-schedules" class="admin-section">
+            <div class="d-flex justify-content-between align-items-center mb-3"><h2><i class="far fa-calendar-alt mr-2"></i>Manage Schedules</h2><button class="btn btn-success" onclick="window.adminApp.openScheduleModal()"><i class="fas fa-plus mr-1"></i>Add New Schedule</button></div>
+            <div class="table-responsive-md"><table class="table table-striped table-hover table-bordered">
+                <thead class="thead-light"><tr><th>ID</th><th>Bus</th><th>Route</th><th>Departure</th><th>Arrival</th><th>Price</th><th>Seats Avail.</th><th>Actions</th></tr></thead>
+                <tbody id="schedulesTableBody"><tr><td colspan="8" class="text-center p-4"><div class="spinner-border spinner-border-sm text-primary" role="status"></div> Loading...</td></tr></tbody>
+            </table></div>
+        </section>
+
+        <!-- View Bookings Section -->
+        <section id="view-bookings" class="admin-section">
+            <h2><i class="fas fa-ticket-alt mr-2"></i>View All Bookings</h2>
+            <div class="table-responsive-md"><table class="table table-striped table-hover table-bordered">
+                <thead class="thead-light"><tr><th>ID</th><th>User</th><th>Bus & Route</th><th>Departure</th><th>Seats</th><th>Price</th><th>Booked On</th><th>Status</th></tr></thead>
+                <tbody id="allBookingsTableBody"><tr><td colspan="8" class="text-center p-4"><div class="spinner-border spinner-border-sm text-primary" role="status"></div> Loading...</td></tr></tbody>
+            </table></div>
+        </section>
+
+        <!-- User Management Section -->
+        <section id="manage-users" class="admin-section">
+            <div class="d-flex justify-content-between align-items-center mb-3"><h2><i class="fas fa-users-cog mr-2"></i>User Management</h2><button class="btn btn-info" onclick="window.adminApp.openAddAdminModal()"><i class="fas fa-user-plus mr-1"></i>Add New Admin</button></div>
+            <div id="userManagementMessageArea" class="mt-2 mb-3"></div>
+            <p>View and manage system users. (Currently, only adding admins is implemented here. Listing users can be added.)</p>
+            <!-- Optional: Table to list all users -->
+            <!-- <div class="table-responsive-md"><table class="table table-hover"><thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Actions</th></tr></thead><tbody id="allUsersTableBody"></tbody></table></div> -->
+        </section>
+    </div> <!-- End Main Content Area -->
+
+    <!-- MODALS SECTION -->
+
+    <!-- Bus Modal -->
+    <div class="modal fade" id="busModal" tabindex="-1" data-backdrop="static" data-keyboard="false" aria-labelledby="busModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header"><h5 class="modal-title" id="busModalLabel">Bus Details</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button></div>
+                <div class="modal-body"><form id="busForm"><input type="hidden" id="busId"><div class="form-group"><label for="busName">Bus Name</label><input type="text" class="form-control" id="busName" required></div><div class="form-group"><label for="busRegNum">Registration No.</label><input type="text" class="form-control" id="busRegNum" required></div><div class="form-group"><label for="busCapacity">Capacity</label><input type="number" class="form-control" id="busCapacity" min="1" required></div><div id="busModalMessageArea" class="mt-2"></div></form></div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button><button type="button" class="btn btn-primary" onclick="window.adminApp.saveBus()">Save Bus</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Route Modal -->
+    <div class="modal fade" id="routeModal" tabindex="-1" data-backdrop="static" data-keyboard="false" aria-labelledby="routeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header"><h5 class="modal-title" id="routeModalLabel">Route Details</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button></div>
+                <div class="modal-body"><form id="routeForm"><input type="hidden" id="routeId"><div class="form-group"><label for="routeSource">Source City</label><input type="text" class="form-control" id="routeSource" required></div><div class="form-group"><label for="routeDestination">Destination City</label><input type="text" class="form-control" id="routeDestination" required></div><div id="routeModalMessageArea" class="mt-2"></div></form></div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button><button type="button" class="btn btn-primary" onclick="window.adminApp.saveRoute()">Save Route</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Modal -->
+    <div class="modal fade" id="scheduleModal" tabindex="-1" data-backdrop="static" data-keyboard="false" aria-labelledby="scheduleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header"><h5 class="modal-title" id="scheduleModalLabel">Schedule Details</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button></div>
+                <div class="modal-body"><form id="scheduleForm"><input type="hidden" id="scheduleId"><div class="form-group"><label for="scheduleBusIdSelect">Bus</label><select class="form-control custom-select" id="scheduleBusIdSelect" required><option value="">Loading buses...</option></select></div><div class="form-group"><label for="scheduleRouteIdSelect">Route</label><select class="form-control custom-select" id="scheduleRouteIdSelect" required><option value="">Loading routes...</option></select></div><div class="form-row"><div class="form-group col-md-6"><label for="scheduleDepartureTime">Departure Time</label><input type="datetime-local" class="form-control" id="scheduleDepartureTime" required></div><div class="form-group col-md-6"><label for="scheduleArrivalTime">Arrival Time</label><input type="datetime-local" class="form-control" id="scheduleArrivalTime" required></div></div><div class="form-group"><label for="schedulePrice">Price per Seat</label><input type="number" class="form-control" id="schedulePrice" step="0.01" min="0" required></div><div class="form-group" id="scheduleSeatsAvailableGroup" style="display:none;"><label for="scheduleSeatsAvailable">Seats Available (Override)</label><input type="number" class="form-control" id="scheduleSeatsAvailable" min="0"></div><div id="scheduleModalMessageArea" class="mt-2"></div></form></div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button><button type="button" class="btn btn-primary" onclick="window.adminApp.saveSchedule()">Save Schedule</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add New Admin Modal -->
+    <div class="modal fade" id="addAdminModal" tabindex="-1" data-backdrop="static" data-keyboard="false" aria-labelledby="addAdminModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header"><h5 class="modal-title" id="addAdminModalLabel">Add New Administrator</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button></div>
+                <div class="modal-body"><form id="addAdminForm"><div class="form-group"><label for="adminUsernameInput">Username</label><input type="text" class="form-control" id="adminUsernameInput" required></div><div class="form-group"><label for="adminEmailInput">Email</label><input type="email" class="form-control" id="adminEmailInput" required></div><div class="form-group"><label for="adminPasswordInput">Password</label><input type="password" class="form-control" id="adminPasswordInput" required minlength="6"><small class="form-text text-muted">Min. 6 characters.</small></div><div class="form-group"><label for="adminConfirmPasswordInput">Confirm Password</label><input type="password" class="form-control" id="adminConfirmPasswordInput" required></div><div id="addAdminModalMessageArea" class="mt-2"></div></form></div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button><button type="button" class="btn btn-primary" onclick="window.adminApp.saveNewAdmin()">Create Admin</button></div>
+            </div>
+        </div>
+    </div>
+    <!-- END MODALS SECTION -->
+
+    <footer class="footer mt-auto py-3 bg-light text-center fixed-bottom">
+        <div class="container">
+            <span class="text-muted">© <span id="currentYearAdmin"></span> Bus Booking System - Admin Panel</span>
+        </div>
+    </footer>
+
+    <!-- Bootstrap and jQuery JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Common Utilities -->
+    <script src="../js/common.js"></script>
+    <!-- Admin Panel Specific Logic -->
+    <script src="admin.js"></script>
+    <script>
+        document.getElementById('currentYearAdmin').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

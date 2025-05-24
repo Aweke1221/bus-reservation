@@ -1,0 +1,274 @@
+/* frontend/css/style.css */
+
+body {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    background-color: #f8f9fa; /* A light, neutral background */
+    color: #343a40; 
+    padding-top: 70px; 
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+.main-content-area {
+    flex-grow: 1; /* Ensures footer stays at the bottom */
+}
+
+/* --- Navigation Bar Enhancements --- */
+.main-navbar {
+    /* background-color: #0056b3 !important; /* A slightly different shade of blue */
+    transition: background-color 0.3s ease;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.75rem;
+    letter-spacing: -0.5px;
+}
+.navbar-brand .fa-bus-alt {
+    color: #ffc107; /* Yellow bus icon */
+}
+.nav-link {
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+.nav-link:hover, .nav-item.active .nav-link {
+    color: #ffffff !important;
+    
+}
+.navbar-nav .nav-item .nav-link i { /* For small screen icon links */
+    margin-right: 8px;
+    width: 20px; /* Ensure icons align text */
+    text-align: center;
+}
+
+
+/* --- Hero Section --- */
+.hero-section {
+    position: relative;
+    padding: 8rem 1rem; /* More padding */
+    background: url('assets/images/hero-background.jpg') no-repeat center center; /* REPLACE with your image */
+    background-size: cover;
+    min-height: 70vh; /* Make hero taller */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 50, 100, 0.6); /* Dark blue overlay for text contrast */
+}
+.hero-content {
+    position: relative; /* To be above the overlay */
+    z-index: 1;
+}
+.hero-section h1 {
+    font-size: 3.5rem; /* Larger heading */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+.hero-section .lead {
+    font-size: 1.3rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+}
+.hero-cta-button {
+    font-size: 1.1rem;
+    padding: 0.8rem 2rem;
+    border-radius: 50px; /* Pill shape */
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    background-color: #ffc107; /* Bootstrap warning yellow for CTA */
+    border-color: #ffc107;
+    color: #343a40; /* Dark text on yellow button */
+}
+.hero-cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    background-color: #e0a800;
+    border-color: #d39e00;
+    color: #343a40;
+}
+
+/* Animation for Hero Text */
+.animated-hero-text {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+.animated-hero-text.delay-1 { animation-delay: 0.3s; }
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* --- Section Title Styling --- */
+.section-title {
+    position: relative;
+    margin-bottom: 2.5rem; /* More space */
+    color: #333;
+    font-size: 2.25rem; /* Larger section titles */
+}
+.section-title span {
+    background-color: #f8f9fa; /* Match body background to "cut through" the line */
+    padding: 0 15px;
+    position: relative;
+    z-index: 1;
+}
+.section-title::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background-color: #dee2e6; /* Light line */
+    z-index: 0;
+}
+
+
+/* --- Search Form Container --- */
+.search-form-container {
+    margin-top: -5rem; /* Pulls the search form up into the hero */
+    position: relative;
+    z-index: 10; /* Ensure it's above hero overlay if hero is very tall */
+}
+.search-form-container .card {
+    border: none;
+    border-radius: 0.75rem; /* Softer corners */
+}
+.search-form-container .input-group-text {
+    background-color: #e9ecef;
+    border-right: none;
+}
+.search-form-container .form-control, .search-form-container .custom-select {
+    border-left: none;
+    border-radius: 0 0.25rem 0.25rem 0 !important; /* Adjust for prepended icon */
+    height: calc(1.5em + .75rem + 5px); /* Taller inputs */
+}
+.search-form-container .form-control:focus, .search-form-container .custom-select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+.route-arrow-icon i {
+    color: #007bff; /* Primary color for arrow */
+    opacity: 0.7;
+}
+.search-button-group button {
+    height: calc(1.5em + .75rem + 5px); /* Match input height */
+    letter-spacing: 0.5px;
+}
+
+/* --- Image Carousel --- */
+.carousel-item img {
+    height: 400px; /* Or adjust as needed */
+    object-fit: cover;
+}
+.carousel-caption {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 1.5rem;
+    border-radius: 0.25rem;
+}
+.carousel-caption h5 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px black;
+}
+.carousel-caption p {
+    font-size: 1rem;
+    text-shadow: 1px 1px 2px black;
+}
+
+/* --- Search Results Styling --- */
+#searchResults .list-group-item { /* Using cards for results instead of list-group */
+    /* ... */
+}
+.booking-card { /* Using this class in main.js for displaying search results */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 1px solid #e0e0e0;
+}
+.booking-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15)!important;
+}
+.booking-card .card-header {
+    background-color: #f8f9fa; /* Light header for card */
+}
+.booking-card .btn-success {
+    font-weight: bold;
+}
+
+/* --- Why Choose Us Section --- */
+.why-choose-us-section {
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
+.feature-icon-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.why-choose-us-section h4 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+
+/* --- Footer --- */
+.footer {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+.footer a:hover i {
+    color: #007bff; /* Primary color on icon hover */
+    transform: scale(1.2);
+}
+.footer i {
+    transition: color 0.2s, transform 0.2s;
+}
+
+/* --- Seat Selection Modal Styles (Ensure these are present) --- */
+/* ... (copy the full .seat-map-container, .seat, .seat-row, .aisle, .seat-legend styles from the previous response here) ... */
+.seat-map-container { display: flex; flex-direction: column; align-items: center; padding: 15px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f8f9fa; overflow-x: auto; margin: 0 auto; }
+.deck-label { font-weight: bold; text-align: center; width: 100%; margin-top: 15px; margin-bottom: 5px; color: #333; }
+.seat-row { display: flex; justify-content: center; margin-bottom: 6px; }
+.seat-group { display: flex; }
+.seat { width: 35px; height: 35px; margin: 4px; border: 1px solid #adb5bd; border-radius: 6px; display: flex; justify-content: center; align-items: center; font-size: 0.75rem; font-weight: bold; cursor: pointer; background-color: #e9ecef; color: #495057; user-select: none; transition: background-color 0.2s ease-in-out, transform 0.1s ease; }
+.seat:hover:not(.booked):not(.non-existent) { transform: scale(1.05); }
+.seat.available { background-color: #28a745; color: white; border-color: #1e7e34; }
+.seat.available:hover { background-color: #218838; }
+.seat.selected { background-color: #007bff; color: white; border-color: #0056b3; box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); }
+.seat.booked { background-color: #dc3545; color: white; border-color: #c82333; cursor: not-allowed; opacity: 0.7; }
+.seat.non-existent { background-color: transparent; border-color: transparent; cursor: default; }
+.aisle { width: 25px; height: 35px; margin: 4px; }
+.seat-selection-info { font-size: 0.9rem; }
+.seat-selection-info strong { color: #333; }
+.seat-legend .seat-example { display: inline-block; width: 18px; height: 18px; border: 1px solid #6c757d; border-radius: 4px; margin-right: 5px; margin-left: 15px; vertical-align: middle; }
+.seat-legend .seat-example:first-child { margin-left: 0; }
+.seat-legend .seat-example.available { background-color: #28a745; }
+.seat-legend .seat-example.selected { background-color: #007bff; }
+.seat-legend .seat-example.booked { background-color: #dc3545; }
+
+/* General page load animation */
+body.page-loaded .animated-hero-text {
+    opacity: 1;
+    transform: translateY(0);
+}

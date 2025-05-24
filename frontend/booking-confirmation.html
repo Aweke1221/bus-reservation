@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation - BusGo</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { padding-top: 70px; padding-bottom: 70px; }
+        .confirmation-container { max-width: 700px; margin-top: 2rem; }
+        .confirmation-icon { font-size: 3rem; color: #28a745; }
+        .booking-details-card { background-color: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand font-weight-bold" href="index.html"><i class="fas fa-bus-alt mr-2"></i>BusGo</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavContent" aria-controls="navbarNavContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item" id="nav-my-bookings" style="display:none;"><a class="nav-link" href="user/my-bookings.html">My Bookings</a></li>
+                    <li class="nav-item" id="nav-my-account" style="display:none;"><a class="nav-link" href="user/profile.html">My Account</a></li>
+                    <li class="nav-item" id="nav-admin-dashboard" style="display:none;"><a class="nav-link" href="admin/admin.html">Admin Panel</a></li>
+                    <li class="nav-item" id="nav-login" style="display:none;"><a class="nav-link" href="login.html">Login</a></li>
+                    <li class="nav-item" id="nav-register" style="display:none;"><a class="nav-link" href="register.html">Register</a></li>
+                    <li class="nav-item" id="nav-logout"><a class="nav-link" href="#" onclick="logoutUser()">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container confirmation-container">
+        <div class="card shadow-sm">
+            <div class="card-body text-center p-4">
+                <i class="fas fa-check-circle confirmation-icon mb-3"></i>
+                <h1 class="h3 mb-3 font-weight-normal">Booking Confirmed!</h1>
+                <p class="lead">Thank you for booking with BusGo. Your journey is confirmed.</p>
+                <p>A confirmation email has been sent to you (if email was provided).</p>
+                <hr class="my-4">
+                <h5 class="mb-3">Your Booking Details:</h5>
+            </div>
+            <div id="bookingDetailsDisplay" class="card-body bg-light border-top">
+                {/* Booking details will be loaded here by JavaScript */}
+                <p class="text-center text-muted">Loading booking details...</p>
+            </div>
+            <div class="card-footer text-center">
+                <a href="index.html" class="btn btn-outline-secondary mr-2">Book Another Trip</a>
+                <a href="user/my-bookings.html" id="viewMyBookingsBtnConf" class="btn btn-primary">View My Bookings</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer mt-auto py-3 bg-dark text-white text-center fixed-bottom">
+        <div class="container"><span>© <span id="currentYearConf"></span> BusGo Travels.</span></div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="js/common.js"></script>
+    <script>
+        document.getElementById('currentYearConf').textContent = new Date().getFullYear();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof updateNav === 'function') {
+                updateNav(); // Update main navigation
+            }
+
+            const bookingDetailsDisplay = document.getElementById('bookingDetailsDisplay');
+            const viewMyBookingsBtnConf = document.getElementById('viewMyBookingsBtnConf');
+
+            // Retrieve booking data from localStorage (or URL parameters if you prefer)
+            const bookingDataString = localStorage.getItem('lastBookingDetails');
+            if (bookingDataString && bookingDetailsDisplay) {
+                try {
+                    const booking = JSON.parse(bookingDataString);
+                    console.log("CONFIRMATION PAGE: Displaying booking details:", booking);
+
+                    // Fetch more details if needed, or use what's passed
+                    // For now, we assume booking object has what we need or we fetch again.
+                    // A better way is for the POST /api/bookings to return all needed details.
+                    // Let's assume the 'bookingResult' from main.js has enough.
+                    // We'd need to augment it with route, bus name, etc.
+
+                    // For a better display, we ideally need more than just bookingId, total_price, seats.
+                    // The backend POST /api/bookings response should be enhanced to include:
+                    // bus_name, route_source, route_destination, departure_time, arrival_time.
+                    // For now, we'll display what we have from a typical booking creation response.
+
+                    let detailsHtml = `
+                        <p><strong>Booking ID:</strong> ${booking.bookingId || booking.id || 'N/A'}</p>
+                        <p><strong>Schedule ID:</strong> ${booking.schedule_id || 'N/A'}</p>
+                        <p><strong>Seats Booked:</strong> ${booking.num_seats || 'N/A'}</p>
+                        <p><strong>Selected Seats:</strong> ${(booking.seat_numbers && Array.isArray(booking.seat_numbers)) ? booking.seat_numbers.join(', ') : 'N/A'}</p>
+                        <p><strong>Total Price:</strong> $${booking.total_price ? parseFloat(booking.total_price).toFixed(2) : 'N/A'}</p>
+                        <p><strong>Status:</strong> <span class="badge badge-success">CONFIRMED</span></p>
+                        <!-- Add more details here like bus name, route, times if available -->
+                    `;
+
+                    // To get full details, we might need to fetch the booking again by its ID
+                    // or have the POST /api/bookings return more comprehensive data.
+                    // Example: Fetching more details if necessary
+                    async function fetchFullBookingDetails(bookingId) {
+                        const token = getToken();
+                        if (!bookingId || !token) return null;
+                        try {
+                            // This assumes you have a GET /api/bookings/:id endpoint
+                            // that returns detailed booking info (joined with schedule, bus, route)
+                            const response = await fetch(`${API_BASE_URL}/bookings/details/${bookingId}`, { // You'll need to create this backend endpoint
+                                headers: { 'Authorization': `Bearer ${token}` }
+                            });
+                            if (!response.ok) {
+                                console.error("Failed to fetch full booking details for confirmation page.");
+                                return null;
+                            }
+                            return await response.json();
+                        } catch (error) {
+                            console.error("Error fetching full booking details:", error);
+                            return null;
+                        }
+                    }
+
+                    if (booking.bookingId) {
+                        fetchFullBookingDetails(booking.bookingId).then(fullDetails => {
+                            if (fullDetails) {
+                                console.log("CONFIRMATION PAGE: Full booking details fetched:", fullDetails);
+                                const departure = fullDetails.departure_time ? new Date(fullDetails.departure_time).toLocaleString([], {dateStyle:'medium', timeStyle:'short'}) : 'N/A';
+                                const arrival = fullDetails.arrival_time ? new Date(fullDetails.arrival_time).toLocaleString([], {dateStyle:'medium', timeStyle:'short'}) : 'N/A';
+                                detailsHtml = `
+                                    <p><strong>Booking ID:</strong> ${fullDetails.booking_id}</p>
+                                    <p><strong>Bus:</strong> ${fullDetails.bus_name || 'N/A'} (${fullDetails.bus_reg_no || 'N/A'})</p>
+                                    <p><strong>Route:</strong> ${fullDetails.route_source || 'N/A'} to ${fullDetails.route_destination || 'N/A'}</p>
+                                    <p><strong>Departure:</strong> ${departure}</p>
+                                    <p><strong>Arrival:</strong> ${arrival}</p>
+                                    <p><strong>Seats Booked:</strong> ${fullDetails.num_seats}</p>
+                                    <p><strong>Selected Seats:</strong> ${(fullDetails.seat_numbers_array && Array.isArray(fullDetails.seat_numbers_array)) ? fullDetails.seat_numbers_array.join(', ') : (fullDetails.seat_numbers || 'N/A')}</p>
+                                    <p><strong>Total Price:</strong> $${parseFloat(fullDetails.total_price).toFixed(2)}</p>
+                                    <p><strong>Status:</strong> <span class="badge badge-success">${fullDetails.status ? fullDetails.status.toUpperCase() : 'CONFIRMED'}</span></p>
+                                    <p class="mt-3"><strong>Passenger Details:</strong></p>
+                                `;
+                                if (fullDetails.passengers && fullDetails.passengers.length > 0) {
+                                    detailsHtml += '<ul class="list-group list-group-flush">';
+                                    fullDetails.passengers.forEach(p => {
+                                        detailsHtml += `<li class="list-group-item bg-light"><strong>${p.passenger_name}</strong> (Age: ${p.passenger_age}, Seat: ${p.seat_number})</li>`;
+                                    });
+                                    detailsHtml += '</ul>';
+                                } else {
+                                    detailsHtml += '<p>Passenger details not fully retrieved for display.</p>';
+                                }
+                                bookingDetailsDisplay.innerHTML = detailsHtml;
+                            } else {
+                                bookingDetailsDisplay.innerHTML = detailsHtml; // Show basic details if full fetch fails
+                            }
+                        });
+                    } else {
+                         bookingDetailsDisplay.innerHTML = detailsHtml; // Fallback if no bookingId
+                    }
+
+                    // Optional: Clear the stored details after displaying them
+                    // localStorage.removeItem('lastBookingDetails');
+                } catch (e) {
+                    console.error("Error parsing or displaying booking details:", e);
+                    bookingDetailsDisplay.innerHTML = "<p class='text-danger'>Error displaying booking details.</p>";
+                }
+            } else if (bookingDetailsDisplay) {
+                bookingDetailsDisplay.innerHTML = "<p class='text-warning'>No booking details found. Please check 'My Bookings'.</p>";
+            }
+
+            if (viewMyBookingsBtnConf) {
+                const user = getCurrentUser();
+                if (!user) { // If somehow user is not in localStorage, hide "My Bookings" button
+                    viewMyBookingsBtnConf.style.display = 'none';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

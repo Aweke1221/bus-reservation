@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings - Bus Booking</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css"> <!-- Adjusted path -->
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="../index.html">BusBook</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                <li class="nav-item" id="nav-login" style="display:none;"><a class="nav-link" href="../login.html">Login</a></li>
+                <li class="nav-item" id="nav-register" style="display:none;"><a class="nav-link" href="../register.html">Register</a></li>
+                <li class="nav-item active" id="nav-my-bookings"><a class="nav-link" href="my-bookings.html">My Bookings <span class="sr-only">(current)</span></a></li>
+                <li class="nav-item" id="nav-admin-dashboard" style="display:none;"><a class="nav-link" href="../admin/admin.html">Admin Panel</a></li>
+                <li class="nav-item" id="nav-logout" style="display:none;"><a class="nav-link" href="#" onclick="logoutUser()">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5 mb-5">
+        <h1 class="mb-4">My Bookings</h1>
+        <div id="myBookingsMessageArea" class="mb-3"></div>
+        <div id="myBookingsListContainer">
+            <p class="text-center">Loading your bookings...</p>
+            <!-- Bookings will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <footer class="footer mt-auto py-3 bg-light text-center fixed-bottom">
+        <div class="container">
+            <span class="text-muted">© 2023 Bus Booking System</span>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="../js/common.js"></script> <!-- Adjusted path -->
+    <script src="user.js"></script>     <!-- For loading bookings -->
+    <script>
+        // Initial setup calls from user.js will handle this
+    </script>
+</body>
+</html>

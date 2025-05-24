@@ -1,0 +1,17 @@
+<!-- ... (head, nav with admin links) ... -->
+<div class="container mt-5">
+    <h2>Manage Buses</h2>
+    <!-- Add Bus Form -->
+    <form id="addBusForm" class="mb-4"> ... inputs for name, reg number, capacity ... </form>
+
+    <h3>Existing Buses</h3>
+    <table class="table table-striped">
+        <thead><tr><th>ID</th><th>Name</th><th>Reg. No.</th><th>Capacity</th><th>Actions</th></tr></thead>
+        <tbody id="busesTableBody">
+            <!-- Bus rows will be injected here by JS -->
+        </tbody>
+    </table>
+</div>
+<!-- ... (scripts, including admin.js) ... -->
+<script src="../js/common.js"></script> <!-- Path relative to admin folder -->
+<script src="admin.js"></script>
